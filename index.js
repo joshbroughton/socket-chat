@@ -17,9 +17,15 @@ io.on('connection', (socket) => {
 });
 
 io.on('connection', (socket) => {
+  username = "Anonymous"
   socket.on('chat message', (msg) => {
+    msg = username + ": " + msg
     io.emit('chat message', msg);
   });
+
+  socket.on('update name', (name) => {
+    username = name;
+  })
 });
 
 server.listen(3000, () => {

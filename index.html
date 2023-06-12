@@ -10,32 +10,39 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    #form {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.25rem;
+    #container {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
+      flex-direction: column;
+      height: 6rem;
     }
 
-    #input {
+    .form {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+    }
+
+    .input {
       border: none;
       padding: 0 1rem;
       flex-grow: 1;
       border-radius: 2rem;
       margin: 0.25rem;
+      height: 2rem;
     }
 
-    #input:focus {
+    .input:focus {
       outline: none;
     }
 
-    #form>button {
+    .form>button {
       background: #333;
       border: none;
       padding: 0 1rem;
@@ -63,9 +70,15 @@
 
 <body>
   <ul id="messages"></ul>
-  <form id="form" action="">
-    <input id="input" autocomplete="off" /><button>Send</button>
-  </form>
+  <div id="container">
+    <form id="form" class="form" action="">
+      <input id="input" class="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <form id="username-form" class="form" action="">
+      <input id="username-input" class="input" autocomplete="off" /><button>Set Username</button>
+    </form>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     var socket = io();
@@ -74,11 +87,22 @@
     var form = document.getElementById('form');
     var input = document.getElementById('input');
 
+    let userForm = document.getElementById('username-form');
+    let userInput = document.getElementById('username-input');
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (input.value) {
         socket.emit('chat message', input.value);
         input.value = '';
+      }
+    });
+
+    userForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (userInput.value) {
+        socket.emit('update name', userInput.value);
+        userInput.value = '';
       }
     });
 
